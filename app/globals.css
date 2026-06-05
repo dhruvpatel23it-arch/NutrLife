@@ -1,0 +1,676 @@
+@import "tailwindcss";
+
+:root {
+  --green: #2EC972;
+  --green-dark: #1a9b52;
+  --green-light: #d4f7e4;
+  --orange: #FF6B35;
+  --yellow: #FFD166;
+  --purple: #7B5EA7;
+  --blue: #2196F3;
+  --bg: #F6FBF4;
+  --card: #ffffff;
+  --text: #1a2e1a;
+  --text2: #5a7a5a;
+  --border: #e0f0e0;
+  --shadow: 0 4px 24px rgba(46,201,114,0.10);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ====== Clerk: Hide "Last used" badge on social buttons ====== */
+[class*="cl-badge"],
+[class*="cl-internal"][class*="badge"],
+[data-localization-key*="lastUsed"],
+[class*="socialButton"] [class*="badge"],
+.cl-socialButtonsBlockButton [class*="badge"],
+[class*="cl-lastUsed"],
+[class*="lastUsed"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+/* ====== End Clerk badge fix ====== */
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.font-clash { font-family: 'Clash Display', sans-serif; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(120px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46,201,114,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(46,201,114,0); }
+}
+
+.animate-fadeInUp { animation: fadeInUp 0.4s ease forwards; }
+.animate-fadeIn { animation: fadeIn 0.3s ease forwards; }
+
+/* Card hover */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(46,201,114,0.18) !important;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 8px;
+  border-radius: 10px;
+  background: var(--border);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* Water cups */
+.water-cup {
+  width: 40px; height: 50px;
+  border-radius: 0 0 10px 10px;
+  border: 2px solid #7ecfff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 4px; font-size: 18px;
+  background: linear-gradient(to top, transparent 100%, transparent 0%);
+}
+.water-cup.filled {
+  border-color: #2196F3;
+  background: linear-gradient(to top, #7ecfff 100%, transparent 0%);
+}
+.water-cup:hover { transform: scale(1.1); }
+
+/* Streak dots */
+.streak-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 2px solid var(--border);
+  color: var(--text2);
+  transition: all 0.2s;
+}
+.streak-dot.done {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.streak-dot.today {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+  animation: pulse-green 2s infinite;
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+  background: #1a2e1a; color: #fff;
+  padding: 0; border-radius: 16px;
+  font-weight: 600; font-size: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.28);
+  opacity: 0; pointer-events: none;
+  transform: translateX(120px);
+  transition: opacity 0.35s, transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  min-width: 300px; max-width: 380px;
+  overflow: hidden;
+}
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+.toast-body {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px;
+}
+.toast-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--green); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.toast-progress {
+  height: 3px; background: var(--green);
+  border-radius: 0 0 16px 16px;
+  animation: toastProgress 3s linear forwards;
+}
+.toast.show .toast-progress { animation: toastProgress 3s linear forwards; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* BMI Scale */
+.bmi-scale {
+  display: flex; border-radius: 10px; overflow: hidden; height: 10px;
+}
+
+/* ==================== ENHANCED ANIMATIONS & EFFECTS ==================== */
+
+/* Smooth page transitions */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button animations */
+@keyframes buttonHover {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.02); }
+  100% { transform: translateY(-2px) scale(1.02); }
+}
+
+@keyframes buttonPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+/* Floating animation for icons */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Smooth color transitions */
+@keyframes colorShift {
+  0%, 100% { background: var(--green); }
+  50% { background: var(--green-dark); }
+}
+
+/* Glow effect */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46,201,114,0.5); }
+  50% { box-shadow: 0 0 0 12px rgba(46,201,114,0); }
+}
+
+/* Shimmer effect for loading */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* Bounce animation */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Scale up entrance */
+@keyframes scaleInUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Smooth icon rotation */
+@keyframes iconRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Sidebar item slide */
+@keyframes sidebarItemEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Card entrance */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Notification slide in */
+@keyframes notificationSlide {
+  from {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Badge pulse */
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Text highlight */
+@keyframes textHighlight {
+  0% { background-color: transparent; }
+  50% { background-color: rgba(46,201,114,0.2); }
+  100% { background-color: transparent; }
+}
+
+/* Utility classes for animations */
+.animate-pageEnter { animation: pageEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-glow { animation: glow 2s infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+.animate-bounce-soft { animation: bounce-soft 1.5s ease-in-out infinite; }
+.animate-scaleInUp { animation: scaleInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.animate-iconRotate { animation: iconRotate 1s linear infinite; }
+
+/* Interactive button effects */
+button, [role="button"] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(46,201,114,0.2) !important;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Smooth input transitions */
+input, textarea, select {
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  transform: translateY(-1px);
+}
+
+/* Hover lift effect for cards */
+.card-hover {
+  animation: cardEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Notification badge animation */
+.notification-badge {
+  animation: badgePulse 0.5s ease 0.2s;
+}
+
+/* Smooth page transitions */
+main {
+  animation: pageEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Sidebar animations */
+.sidebar-item {
+  animation: sidebarItemEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Staggered list animations */
+.list-item {
+  animation: fadeInUp 0.4s ease;
+}
+.list-item:nth-child(2) { animation-delay: 0.05s; }
+.list-item:nth-child(3) { animation-delay: 0.1s; }
+.list-item:nth-child(4) { animation-delay: 0.15s; }
+.list-item:nth-child(5) { animation-delay: 0.2s; }
+.list-item:nth-child(6) { animation-delay: 0.25s; }
+.list-item:nth-child(7) { animation-delay: 0.3s; }
+.list-item:nth-child(8) { animation-delay: 0.35s; }
+
+/* Smooth color transitions for interactive elements */
+.interactive-element {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.interactive-element:hover {
+  filter: brightness(1.05);
+}
+
+/* Icon animations */
+.icon-animate {
+  transition: all 0.3s ease;
+}
+
+.icon-animate:hover {
+  animation: float 0.6s ease-in-out;
+}
+
+/* Loading skeleton animation */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Prevent transition on transform and opacity */
+button, input, textarea, select, [role="button"] {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+/* Text animations */
+.text-animate {
+  animation: fadeInUp 0.4s ease;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhance focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+
+/* ==================== RESPONSIVE / MOBILE ==================== */
+
+/* Mobile sidebar overlay backdrop */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+.sidebar-overlay.open { display: block; }
+
+/* Mobile sidebar state */
+@media (max-width: 768px) {
+  /* Sidebar hidden off-screen by default on mobile */
+  aside.nutrilife-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 100;
+    width: 260px !important;
+  }
+  aside.nutrilife-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Main content takes full width */
+  main.nutrilife-main {
+    margin-left: 0 !important;
+    padding-bottom: 72px; /* space for bottom nav */
+  }
+
+  /* Background slides also start from 0 */
+  .bg-slide-panel {
+    left: 0 !important;
+  }
+
+  /* Topbar */
+  .nutrilife-topbar {
+    padding: 12px 16px !important;
+    gap: 10px !important;
+  }
+  .nutrilife-topbar-title {
+    font-size: 17px !important;
+  }
+  .nutrilife-search-bar {
+    display: none !important;
+  }
+
+  /* Page content padding */
+  .nutrilife-content {
+    padding: 16px !important;
+  }
+
+  /* Toast repositioned */
+  .toast {
+    bottom: 80px;
+    right: 12px;
+    left: 12px;
+    min-width: unset;
+    max-width: 100%;
+  }
+
+  /* Banner */
+  .dashboard-banner {
+    padding: 22px 20px !important;
+    border-radius: 16px !important;
+  }
+  .dashboard-banner h2 { font-size: 20px !important; }
+  .banner-stats {
+    gap: 8px !important;
+    flex-wrap: wrap;
+  }
+  .banner-stat {
+    padding: 8px 12px !important;
+    flex: 1 1 auto;
+    min-width: 70px;
+  }
+
+  /* Grids → single column on mobile */
+  .grid-4col, .grid-3col, .grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-2col-sm {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Dashboard stat grid → 2 columns on mobile */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Water cups wrapping */
+  .water-cup { width: 34px; height: 44px; }
+
+  /* Streak dots smaller */
+  .streak-dot { width: 30px; height: 30px; font-size: 11px; }
+}
+
+/* Bottom nav bar (mobile only) */
+.bottom-nav {
+  display: none;
+}
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1.5px solid var(--border);
+    z-index: 98;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    box-shadow: 0 -4px 24px rgba(46,201,114,0.10);
+  }
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+    cursor: pointer;
+    padding: 6px 4px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    color: var(--text2);
+    font-size: 10px;
+    font-weight: 500;
+    border: none;
+    background: none;
+  }
+  .bottom-nav-item.active {
+    color: var(--green-dark);
+    background: var(--green-light);
+  }
+  .bottom-nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Hamburger button */
+  .hamburger-btn {
+    display: flex !important;
+  }
+}
+
+/* Show hamburger only on mobile */
+.hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Tablet adjustments (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  aside.nutrilife-sidebar {
+    width: 200px !important;
+  }
+  main.nutrilife-main {
+    margin-left: 200px !important;
+  }
+  .bg-slide-panel {
+    left: 200px !important;
+  }
+  .nutrilife-content {
+    padding: 20px !important;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .grid-4col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .grid-3col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .mealplan-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Mobile: mealplan-grid */
+@media (max-width: 768px) {
+  .mealplan-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .nutrilife-topbar {
+    padding: 10px 12px !important;
+  }
+  .nutrilife-topbar-title {
+    font-size: 15px !important;
+  }
+  .mealplan-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+
