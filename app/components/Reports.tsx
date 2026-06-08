@@ -14,9 +14,10 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 interface DayData {
   label: string;
   calories: number;
-  water: number;   // litres
-  sleep: number;   // hours
-  weight: number;  // kg
+  water: number;
+  sleep: number;
+  weight: number;
+  [key: string]: string | number;  // ← add this line
 }
 
 function buildWeekData(): DayData[] {
