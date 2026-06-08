@@ -18,6 +18,19 @@
   --radius-sm: 12px;
 }
 
+body.dark-mode {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f8fafc;
+  --text2: #94a3b8;
+  --border: #334155;
+  --green: #2EC972;
+  --green-dark: #22c55e;
+  --green-light: #064e3b;
+  --orange: #f97316;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ====== Clerk: Hide "Last used" badge on social buttons ====== */

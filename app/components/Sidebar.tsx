@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, UtensilsCrossed, BookOpen, CalendarDays, TrendingUp, ShoppingCart, Info, Lightbulb, User, Users, Target, Heart, X } from "lucide-react";
+import { LayoutDashboard, UtensilsCrossed, BookOpen, CalendarDays, TrendingUp, ShoppingCart, Info, Lightbulb, User, Users, Target, Heart, Moon, BarChart2, Dumbbell, Settings, HelpCircle, X, LogOut } from "lucide-react";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -8,12 +8,16 @@ const navItems = [
   { id: "wishlist", label: "My Wishlist", icon: Heart },
   { id: "mealplan", label: "Meal Plan", icon: CalendarDays },
   { id: "progress", label: "Progress", icon: TrendingUp },
+  { id: "sleep", label: "Sleep Tracker", icon: Moon },
+  { id: "reports", label: "Reports", icon: BarChart2 },
+  { id: "workout", label: "Workout Plans", icon: Dumbbell },
   { id: "community", label: "Community", icon: Users, badge: "New" },
   { id: "shopping", label: "Shopping List", icon: ShoppingCart, badge: "5" },
   { id: "nutrition", label: "Nutrition Info", icon: Info },
   { id: "calculator", label: "Calculator", icon: Target },
   { id: "tips", label: "Health Tips", icon: Lightbulb },
-  { id: "profile", label: "My Profile", icon: User },
+  { id: "help", label: "Help & Support", icon: HelpCircle },
+  { id: "settings", label: "Settings", icon: Settings },
 ];
 
 import { UserType } from "../page";
@@ -24,12 +28,14 @@ export default function Sidebar({
   user,
   isOpen,
   onClose,
+  onLogout,
 }: {
   active: string;
   onNav: (id: string) => void;
   user?: UserType;
   isOpen?: boolean;
   onClose?: () => void;
+  onLogout?: () => void;
 }) {
   const handleNav = (id: string) => {
     onNav(id);
@@ -122,38 +128,51 @@ export default function Sidebar({
 
       {/* Footer */}
       {user && (
-        <div
-          onClick={() => handleNav("profile")}
-          style={{
-            padding: "18px 22px",
-            borderTop: "1.5px solid var(--border)",
-            cursor: "pointer",
-            transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-            animation: "fadeInUp 0.5s ease 0.5s backwards",
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = "var(--green-light)";
-            e.currentTarget.style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.transform = "translateY(0)";
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{
+          padding: "18px 22px",
+          borderTop: "1.5px solid var(--border)",
+          animation: "fadeInUp 0.5s ease 0.5s backwards",
+          display: "flex", alignItems: "center", justifyContent: "space-between"
+        }}>
+          <div
+            onClick={() => handleNav("settings")}
+            style={{
+              display: "flex", alignItems: "center", gap: 12, cursor: "pointer", flex: 1, minWidth: 0,
+              padding: "8px 12px", borderRadius: "14px", marginLeft: "-12px",
+              background: active === "settings" ? "var(--green-light)" : "transparent",
+              transition: "background 0.2s"
+            }}
+            onMouseEnter={e => { if (active !== "settings") e.currentTarget.style.background = "var(--bg)"; }}
+            onMouseLeave={e => { if (active !== "settings") e.currentTarget.style.background = "transparent"; }}
+          >
             <div style={{
               width: 40, height: 40, borderRadius: "50%",
               background: "linear-gradient(135deg, var(--green), var(--green-dark))",
               display: "flex", alignItems: "center", justifyContent: "center",
               color: "#fff", fontWeight: 700, fontSize: 16,
               boxShadow: "0 4px 12px rgba(46,201,114,0.3)",
-              transition: "all 0.3s ease",
+              flexShrink: 0
             }}>{user.initials}</div>
             <div style={{ overflow: "hidden" }}>
               <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.name}</div>
               <div style={{ fontSize: 11, color: "var(--text2)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.email}</div>
             </div>
           </div>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              style={{
+                background: "none", border: "none", cursor: "pointer", color: "var(--text2)",
+                padding: "8px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "all .2s"
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; e.currentTarget.style.background = "#FEF2F2"; }}
+              onMouseLeave={e => { e.currentTarget.style.color = "var(--text2)"; e.currentTarget.style.background = "none"; }}
+              title="Log Out"
+            >
+              <LogOut size={20} />
+            </button>
+          )}
         </div>
       )}
     </aside>

@@ -14,6 +14,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
           <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+          <script dangerouslySetInnerHTML={{ __html: `
+            if (localStorage.getItem('nutrilife_dark') === 'true') {
+              document.documentElement.classList.add('dark-mode');
+              /* Fallback for body in case CSS targets body */
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dark-mode'));
+              } else {
+                document.body.classList.add('dark-mode');
+              }
+            }
+          `}} />
         </head>
         <body>{children}</body>
       </html>

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { LayoutDashboard, UtensilsCrossed, TrendingUp, User, Users, Menu } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import Toast from "./components/Toast";
@@ -14,9 +15,15 @@ import Nutrition from "./components/Nutrition";
 import Tips from "./components/Tips";
 import Profile from "./components/Profile";
 import Community from "./components/Community";
+import Settings from "./components/Settings";
+import HelpSupport from "./components/HelpSupport";
 import VoiceAssistant from "./components/VoiceAssistant";
 import Calculator from "./components/Calculator";
 import Notifications, { Notification } from "./components/Notifications";
+import SleepTracker from "./components/SleepTracker";
+import Reports from "./components/Reports";
+import WorkoutPlans from "./components/WorkoutPlans";
+import LogoutManager from "./components/LogoutManager";
 import confetti from "canvas-confetti";
 
 export type UserType = {
@@ -40,7 +47,11 @@ const PAGE_TITLES: Record<string, string> = {
   dashboard: "Dashboard", meals: "Meal Log", recipes: "Recipes",
   wishlist: "My Wishlist", mealplan: "Meal Plan", progress: "My Progress",
   shopping: "Shopping List", nutrition: "Nutrition Hub", tips: "Health Tips",
-  profile: "My Profile", community: "Community & Friends", calculator: "Macro Calculator"
+  settings: "Settings", community: "Community & Friends", calculator: "Macro Calculator",
+  sleep: "Sleep Tracker",
+  reports: "Reports & Analytics",
+  workout: "Workout Plans",
+  help: "Help & Support",
 };
 
 // Bottom nav items (5 most used)
@@ -54,6 +65,14 @@ const bottomNavItems = [
 
 export default function Home() {
   const { user: clerkUser, isLoaded } = useUser();
+  const router = useRouter();
+
+  // Redirect unauthenticated users to sign-in (client-side guard)
+  useEffect(() => {
+    if (isLoaded && !clerkUser) {
+      router.replace("/sign-in");
+    }
+  }, [isLoaded, clerkUser, router]);
 
   const user: UserType = clerkUser ? {
     name: clerkUser.fullName || clerkUser.firstName || "User",
@@ -69,6 +88,7 @@ export default function Home() {
   const [toast, setToast] = useState({ show: false, msg: "" });
   const [search, setSearch] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -179,15 +199,36 @@ export default function Home() {
 
   // (Removed recurring "Welcome Back!" notification — it was firing on every page load)
 
-  if (!isLoaded) {
+  // Show branded loading/redirect screen while Clerk resolves auth
+  if (!isLoaded || !clerkUser) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg)" }}>
+      <div style={{
+        minHeight: "100vh", display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        background: "linear-gradient(135deg, #0f2d14 0%, #1a4d2e 60%, #0a1f0d 100%)",
+      }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontFamily: "'Clash Display', sans-serif", fontSize: 36, fontWeight: 700, color: "var(--green-dark)", marginBottom: 12 }}>
-            Nutri<span style={{ color: "var(--orange)" }}>Life</span>
+          <div style={{
+            fontFamily: "'Clash Display', sans-serif", fontSize: 42, fontWeight: 700,
+            color: "#fff", marginBottom: 8, letterSpacing: "-0.5px",
+          }}>
+            Nutri<span style={{ color: "#FF6B35" }}>Life</span>
           </div>
-          <div style={{ color: "var(--text2)", fontSize: 14 }}>Loading...</div>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 15, marginBottom: 32 }}>
+            Your Healthy Diet Companion
+          </p>
+          {/* Spinner */}
+          <div style={{
+            width: 40, height: 40, borderRadius: "50%",
+            border: "3px solid rgba(255,255,255,0.2)",
+            borderTopColor: "#2EC972",
+            animation: "nlSpin 0.8s linear infinite",
+            margin: "0 auto",
+          }} />
         </div>
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes nlSpin { to { transform: rotate(360deg); } }
+        ` }} />
       </div>
     );
   }
@@ -203,9 +244,14 @@ export default function Home() {
       case "shopping":  return <Shopping showToast={showToast} />;
       case "nutrition": return <Nutrition />;
       case "calculator": return <Calculator />;
+      case "sleep":      return <SleepTracker showToast={showToast} />;
+      case "reports":    return <Reports showToast={showToast} />;
+      case "workout":    return <WorkoutPlans showToast={showToast} />;
       case "tips":      return <Tips />;
+      case "help":      return <HelpSupport showToast={showToast} />;
       case "community": return <Community showToast={showToast} user={user} />;
-      case "profile":   return <Profile showToast={showToast} user={user} onLogout={() => {}} />;
+      case "settings":  return <Settings showToast={showToast} user={user} />;
+      case "profile":   return <Profile showToast={showToast} user={user} onLogout={() => setShowLogoutModal(true)} />;
       default:          return <Dashboard showToast={showToast} user={user} onNav={setPage} />;
     }
   };
@@ -226,6 +272,7 @@ export default function Home() {
         user={user}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        onLogout={() => setShowLogoutModal(true)}
       />
 
       <main className="nutrilife-main" style={{ marginLeft: 240, minHeight: "100vh", position: "relative" }}>
@@ -403,6 +450,8 @@ export default function Home() {
           </div>
         </div>
       )}
+      
+      <LogoutManager showLogoutModal={showLogoutModal} setShowLogoutModal={setShowLogoutModal} />
     </>
   );
 }

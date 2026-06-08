@@ -167,6 +167,7 @@ export default function SignInPage() {
         {/* Clerk Sign In component */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <SignIn
+            forceRedirectUrl="/"
             appearance={{
               layout: {
                 socialButtonsPlacement: "top",
