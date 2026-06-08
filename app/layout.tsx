@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "NutriLife – Your Healthy Diet Companion",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               }
             }
           `}} />
+          <Analytics />
         </head>
         <body>{children}</body>
       </html>
@@ -32,3 +34,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   );
 }
 
+;
