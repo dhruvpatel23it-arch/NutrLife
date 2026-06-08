@@ -770,7 +770,7 @@ export default function WorkoutPlans({ showToast }: { showToast: (msg: string) =
               <div style={{ fontSize: 48, fontWeight: 800, lineHeight: 1 }}>{calcResult}</div>
               <div style={{ fontSize: 15, opacity: 0.9, marginTop: 6 }}>kcal burned</div>
               <div style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
-                {Math.floor(calcDuration)} min · {EXERCISE_MET.find(e => e.name === calcExercise)?.emoji}
+                {Math.floor(parseFloat(calcDuration))} min · {EXERCISE_MET.find(e => e.name === calcExercise)?.emoji}
               </div>
             </div>
           </div>
