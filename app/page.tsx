@@ -74,6 +74,16 @@ export default function Home() {
     }
   }, [isLoaded, clerkUser, router]);
 
+  // Sync logged-in user to Neon DB (runs once per session when user is resolved)
+  useEffect(() => {
+    if (!isLoaded || !clerkUser) return;
+    // Fire-and-forget: silently upserts the user into our Neon DB
+    // The API route checks if they already exist first, so this is safe to call every login
+    fetch("/api/auth/callback").catch((err) =>
+      console.error("Failed to sync user to DB:", err)
+    );
+  }, [isLoaded, clerkUser]);
+
   const user: UserType = clerkUser ? {
     name: clerkUser.fullName || clerkUser.firstName || "User",
     email: clerkUser.primaryEmailAddress?.emailAddress || "",
