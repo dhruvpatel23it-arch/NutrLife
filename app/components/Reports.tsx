@@ -242,8 +242,30 @@ export default function ReportsAnalytics({ showToast }: { showToast: (msg: strin
   }, [monthOffset]);
 
   const handleExport = (type: "pdf" | "excel" | "print") => {
-    if (type === "print") { window.print(); return; }
-    showToast(`📄 ${type === "pdf" ? "PDF" : "Excel"} export started — file will download shortly.`);
+    if (type === "print" || type === "pdf") { 
+      window.print(); 
+      if (type === "pdf") {
+        showToast("📄 Please select 'Save as PDF' in the print dialog.");
+      }
+      return; 
+    }
+
+    if (type === "excel") {
+      const headers = ["Day", "Calories (kcal)", "Water (L)", "Sleep (h)", "Weight (kg)"];
+      const rows = weekData.map(d => [d.label, d.calories, d.water, d.sleep, d.weight]);
+      const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `NutriLife_Report_${currentMonth.replace(" ", "_")}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast(`📊 Excel (CSV) report downloaded successfully.`);
+    }
   };
 
   return (
