@@ -69,16 +69,39 @@ function SupportCard({ icon, title, desc, action, onClick, color }: {
 
 export default function HelpSupport({ showToast }: { showToast: (msg: string) => void }) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [activeForm, setActiveForm] = useState<"none" | "contact" | "bug">("none");
+  const [activeForm, setActiveForm] = useState<"none" | "contact" | "bug" | "chat">("none");
   const [formMsg, setFormMsg] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [chatMessages, setChatMessages] = useState<{sender: "user" | "bot", text: string}[]>([
+    { sender: "bot", text: "Hi! I am the NutriLife support bot. Ask me any questions!" }
+  ]);
+  const [chatInput, setChatInput] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formMsg.trim()) {
       showToast("Please enter a message before submitting.");
       return;
     }
+
+    // Get subject from form
+    const subjectSelect = (e.target as any).querySelector('select');
+    const subject = subjectSelect ? subjectSelect.value : "Support Request";
+
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: activeForm,
+          subject: subject,
+          message: formMsg
+        })
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
     setFormSubmitted(true);
     showToast("✅ Successfully submitted! We'll get back to you shortly.");
     setTimeout(() => {
@@ -86,6 +109,33 @@ export default function HelpSupport({ showToast }: { showToast: (msg: string) =>
       setFormMsg("");
       setActiveForm("none");
     }, 3000);
+  };
+
+  const handleSendChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+    
+    const userMsg = chatInput;
+    setChatMessages(prev => [...prev, { sender: "user", text: userMsg }]);
+    setChatInput("");
+    
+    setTimeout(() => {
+      let botResponse = "I'm sorry, I don't have an answer for that. Please try contacting support through Email.";
+      const lowerMsg = userMsg.toLowerCase();
+      
+      const matchedFaq = FAQS.find(faq => {
+        const keywords = faq.question.toLowerCase().split(' ').filter(w => w.length > 3 && w !== 'how' && w !== 'what');
+        return keywords.some(kw => lowerMsg.includes(kw));
+      });
+      
+      if (matchedFaq) {
+        botResponse = matchedFaq.answer;
+      } else if (lowerMsg.includes("hello") || lowerMsg.includes("hi")) {
+        botResponse = "Hello there! How can I assist you with NutriLife today?";
+      }
+      
+      setChatMessages(prev => [...prev, { sender: "bot", text: botResponse }]);
+    }, 600);
   };
 
   return (
@@ -119,7 +169,7 @@ export default function HelpSupport({ showToast }: { showToast: (msg: string) =>
           title="Live Chat"
           desc="Chat directly with our support team for quick answers."
           action="Start Chat"
-          onClick={() => showToast("💬 Connecting to a support agent...")}
+          onClick={() => setActiveForm("chat")}
         />
         <SupportCard
           icon={<Mail size={24} color="#3B82F6" />}
@@ -156,12 +206,51 @@ export default function HelpSupport({ showToast }: { showToast: (msg: string) =>
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 20, fontWeight: 700, color: "var(--text)" }}>
-              {activeForm === "contact" ? <><Mail color="#3B82F6" /> Contact Support</> : <><Bug color="#EF4444" /> Report a Problem</>}
+              {activeForm === "contact" ? <><Mail color="#3B82F6" /> Contact Support</> : 
+               activeForm === "bug" ? <><Bug color="#EF4444" /> Report a Problem</> : 
+               <><MessageCircle color="#2EC972" /> Live Chat</>}
             </div>
             <button onClick={() => setActiveForm("none")} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text2)" }}>✕ Cancel</button>
           </div>
 
-          {formSubmitted ? (
+          {activeForm === "chat" ? (
+            <div style={{ display: "flex", flexDirection: "column", height: 400 }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: "10px", background: "#f9fafb", borderRadius: 12, marginBottom: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+                {chatMessages.map((msg, i) => (
+                  <div key={i} style={{ 
+                    alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
+                    background: msg.sender === "user" ? "#2EC972" : "#fff",
+                    color: msg.sender === "user" ? "#fff" : "var(--text)",
+                    padding: "10px 14px", borderRadius: 16, maxWidth: "80%",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)", border: msg.sender === "bot" ? "1px solid var(--border)" : "none",
+                    fontSize: 14, lineHeight: 1.5
+                  }}>
+                    {msg.text}
+                  </div>
+                ))}
+              </div>
+              <form onSubmit={handleSendChat} style={{ display: "flex", gap: 10 }}>
+                <input 
+                  type="text" 
+                  value={chatInput} 
+                  onChange={e => setChatInput(e.target.value)}
+                  placeholder="Type your message..."
+                  style={{
+                    flex: 1, padding: "12px 16px", borderRadius: 12, border: "1.5px solid var(--border)",
+                    fontSize: 15, outline: "none"
+                  }}
+                  onFocus={e => e.target.style.borderColor = "#2EC972"}
+                  onBlur={e => e.target.style.borderColor = "var(--border)"}
+                />
+                <button type="submit" style={{
+                  padding: "0 20px", borderRadius: 12, border: "none",
+                  background: "#2EC972", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center"
+                }}>
+                  <Send size={18} />
+                </button>
+              </form>
+            </div>
+          ) : formSubmitted ? (
             <div style={{ textAlign: "center", padding: "40px 0", color: "var(--green)" }}>
               <CheckCircle2 size={64} style={{ margin: "0 auto 16px" }} />
               <div style={{ fontSize: 24, fontWeight: 700 }}>Message Sent!</div>
