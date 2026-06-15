@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     // Create table if it doesn't exist
     await query(`
-      CREATE TABLE IF NOT EXISTS support_messages (
+      CREATE TABLE IF NOT EXISTS user_preferences (
         id SERIAL PRIMARY KEY,
         type VARCHAR(50),
         subject VARCHAR(255),
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     // Insert the data
     await query(
-      `INSERT INTO support_messages (type, subject, message) VALUES ($1, $2, $3)`,
+      `INSERT INTO user_preferences (type, subject, message) VALUES ($1, $2, $3)`,
       [type, subject, message]
     );
 
