@@ -2,11 +2,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { en } from "./en";
 import { hi } from "./hi";
+import { gu } from "./gu";
+import { fr } from "./fr";
+import { de } from "./de";
+import { es } from "./es";
 
 // Add other languages here as they are created
 const dictionaries: Record<string, any> = {
-  en,
-  hi,
+  en, hi, gu, fr, de, es,
 };
 
 type LanguageContextType = {

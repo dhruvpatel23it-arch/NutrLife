@@ -21,6 +21,7 @@ const navItems = [
 ];
 
 import { UserType } from "../page";
+import { useTranslation } from "../../lib/i18n/LanguageContext";
 
 export default function Sidebar({
   active,
@@ -37,6 +38,8 @@ export default function Sidebar({
   onClose?: () => void;
   onLogout?: () => void;
 }) {
+  const { t } = useTranslation();
+
   const handleNav = (id: string) => {
     onNav(id);
     // Close sidebar on mobile after navigating
@@ -64,7 +67,7 @@ export default function Sidebar({
         <div>
           Nutri<span style={{ color: "var(--orange)" }}>Life</span>
           <div style={{ fontSize: 11, fontWeight: 400, color: "var(--text2)", marginTop: 2, fontFamily: "'DM Sans', sans-serif" }}>
-            Your Healthy Diet Companion
+            {t("sidebar.subtitle")}
           </div>
         </div>
         {/* Close button visible only on mobile via CSS */}
@@ -114,7 +117,7 @@ export default function Sidebar({
             }}
           >
             <Icon size={18} style={{ flexShrink: 0, transition: "transform 0.3s ease" }} />
-            <span>{label}</span>
+            <span>{t(`sidebar.${id}`)}</span>
             {badge && (
               <span style={{
                 background: "var(--orange)", color: "#fff", fontSize: 11, fontWeight: 700,
@@ -168,7 +171,7 @@ export default function Sidebar({
               }}
               onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; e.currentTarget.style.background = "#FEF2F2"; }}
               onMouseLeave={e => { e.currentTarget.style.color = "var(--text2)"; e.currentTarget.style.background = "none"; }}
-              title="Log Out"
+              title={t("settings.signOut")}
             >
               <LogOut size={20} />
             </button>
