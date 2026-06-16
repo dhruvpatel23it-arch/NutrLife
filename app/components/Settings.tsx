@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
@@ -153,6 +153,13 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
   const [bio, setBio] = useState("Fitness enthusiast · Healthy eating advocate");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedAvatar = localStorage.getItem("nutrilife_avatar");
+      if (savedAvatar) setAvatarPreview(savedAvatar);
+    }
+  }, []);
+
   // Security state
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -225,10 +232,20 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { showToast("Image must be < 5 MB"); return; }
-    const url = URL.createObjectURL(file);
-    setAvatarPreview(url);
-    showToast("Profile photo updated!");
+    if (file.size > 2 * 1024 * 1024) { showToast("Image must be < 2 MB to save locally"); return; }
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setAvatarPreview(base64String);
+      try {
+        localStorage.setItem("nutrilife_avatar", base64String);
+        showToast("Profile photo updated!");
+      } catch (err) {
+        showToast("Image too large to save locally. Try a smaller photo.");
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleChangePassword = () => {

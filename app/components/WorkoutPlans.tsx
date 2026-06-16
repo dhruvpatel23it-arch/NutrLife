@@ -8,8 +8,8 @@ import {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Level = "Beginner" | "Intermediate" | "Advanced";
-type WorkoutType = "Weight Loss" | "Muscle Gain" | "Yoga & Flexibility" | "HIIT" | "Cardio";
+type Level = "Beginner" | "Intermediate" | "Advanced" | "All";
+type WorkoutType = "Weight Loss" | "Weight Gain" | "Muscle Gain" | "Maintenance" | "Yoga & Flexibility" | "HIIT" | "Cardio";
 type Location = "Home" | "Gym" | "Both";
 
 interface Exercise {
@@ -52,84 +52,285 @@ interface WorkoutPlan {
 
 const WORKOUT_PLANS: WorkoutPlan[] = [
   {
-    id: "wl-30",
-    title: "Weight Loss Blitz",
-    emoji: "🏃",
+    id: "wl-new",
+    title: "Weight Loss Exercises",
+    emoji: "🔥",
     type: "Weight Loss",
     level: "Beginner",
-    location: "Home",
+    location: "Both",
     duration: 30,
     daysPerWeek: 5,
-    totalCaloriesPerWeek: 2800,
-    description: "A high-energy cardio + HIIT program designed for maximum fat burn. No equipment needed.",
+    totalCaloriesPerWeek: 3500,
+    description: "Goal: Burn calories and reduce body fat. Cardio 5 days/week, Strength 2–3 days/week. 30–60 minutes per session.",
     color: "#EF4444",
     gradient: "linear-gradient(135deg, #EF4444, #F97316)",
-    completedDays: 7,
+    completedDays: 0,
     schedule: [
       {
         day: "Day 1 — Cardio Blast",
-        focus: "Full Body Cardio",
-        duration: 35,
-        totalCalories: 320,
+        focus: "Steady State Cardio",
+        duration: 45,
+        totalCalories: 450,
         exercises: [
-          { name: "Jumping Jacks", sets: 3, reps: "45 sec", rest: "15 sec", calories: 30, muscles: ["Full Body"], videoTip: "Land softly on balls of feet", instructions: ["Stand with feet together", "Jump feet out while raising arms overhead", "Jump back to start", "Keep core tight throughout"] },
-          { name: "High Knees", sets: 3, reps: "40 sec", rest: "20 sec", calories: 35, muscles: ["Legs", "Core"], videoTip: "Drive knees to hip height", instructions: ["Run in place driving knees up", "Pump arms opposite to legs", "Stay on balls of feet", "Maintain upright posture"] },
-          { name: "Burpees", sets: 3, reps: "10 reps", rest: "30 sec", calories: 60, muscles: ["Full Body"], videoTip: "Explosive jump at the top", instructions: ["Drop hands to floor", "Jump feet back to plank", "Do a push-up", "Jump feet forward and leap up"] },
-          { name: "Mountain Climbers", sets: 3, reps: "30 sec", rest: "15 sec", calories: 40, muscles: ["Core", "Shoulders"], videoTip: "Keep hips level", instructions: ["Start in plank position", "Drive one knee toward chest", "Alternate legs rapidly", "Keep hips from bouncing"] },
+          { name: "Running / Jogging", sets: 1, reps: "20 min", rest: "0 sec", calories: 200, muscles: ["Legs", "Cardio"], videoTip: "Keep a steady pace", instructions: ["Start with a brisk walk to warm up", "Transition to a jog or run", "Maintain consistent breathing"] },
+          { name: "Cycling", sets: 1, reps: "15 min", rest: "0 sec", calories: 150, muscles: ["Quads", "Cardio"], videoTip: "Keep resistance moderate", instructions: ["Adjust seat height", "Pedal at 80-90 RPM", "Keep core engaged"] },
+          { name: "Brisk Walking", sets: 1, reps: "10 min", rest: "0 sec", calories: 100, muscles: ["Legs"], videoTip: "Cool down phase", instructions: ["Walk at a brisk pace", "Pump your arms", "Focus on breathing"] },
         ],
       },
       {
-        day: "Day 2 — Lower Body",
-        focus: "Legs & Glutes",
-        duration: 30,
-        totalCalories: 280,
+        day: "Day 2 — HIIT & Strength",
+        focus: "High Intensity Fat Burn",
+        duration: 35,
+        totalCalories: 380,
         exercises: [
-          { name: "Squats", sets: 4, reps: "20 reps", rest: "30 sec", calories: 40, muscles: ["Quads", "Glutes"], videoTip: "Knees track over toes", instructions: ["Feet shoulder-width apart", "Lower until thighs parallel to floor", "Push through heels to rise", "Keep chest tall"] },
-          { name: "Reverse Lunges", sets: 3, reps: "12 each leg", rest: "20 sec", calories: 35, muscles: ["Quads", "Hamstrings"], videoTip: "Step back far enough", instructions: ["Step back with one foot", "Lower back knee toward floor", "Push front foot to return", "Alternate legs"] },
-          { name: "Glute Bridges", sets: 3, reps: "20 reps", rest: "20 sec", calories: 25, muscles: ["Glutes", "Hamstrings"], videoTip: "Squeeze glutes at the top", instructions: ["Lie on back, knees bent", "Drive hips up by squeezing glutes", "Hold 1 second at top", "Lower slowly"] },
-          { name: "Wall Sit", sets: 3, reps: "45 sec", rest: "30 sec", calories: 30, muscles: ["Quads"], videoTip: "Thighs parallel to ground", instructions: ["Back flat against wall", "Slide down until 90° knee bend", "Hold position", "Keep arms relaxed"] },
+          { name: "Burpees", sets: 4, reps: "15 reps", rest: "30 sec", calories: 80, muscles: ["Full Body"], videoTip: "Explode up from the floor", instructions: ["Drop to a plank", "Perform a push-up", "Jump feet in", "Leap up with hands overhead"] },
+          { name: "Mountain Climbers", sets: 4, reps: "45 sec", rest: "20 sec", calories: 60, muscles: ["Core", "Shoulders"], videoTip: "Keep hips low", instructions: ["Start in plank", "Drive knees to chest rapidly", "Keep back flat"] },
+          { name: "High Knees", sets: 4, reps: "40 sec", rest: "20 sec", calories: 50, muscles: ["Legs", "Cardio"], videoTip: "Drive knees above waist", instructions: ["Run in place", "Lift knees high", "Pump arms"] },
+          { name: "Squat Jumps", sets: 4, reps: "15 reps", rest: "30 sec", calories: 70, muscles: ["Quads", "Glutes"], videoTip: "Land softly", instructions: ["Squat down", "Explode upwards", "Land softly in a squat"] },
+          { name: "Jumping Jacks", sets: 3, reps: "60 sec", rest: "20 sec", calories: 40, muscles: ["Full Body"], videoTip: "Keep arms straight", instructions: ["Jump feet out", "Arms go overhead", "Return to start"] },
         ],
       },
-      { day: "Day 3 — Rest / Active Recovery", focus: "Stretching", duration: 20, totalCalories: 80, exercises: [] },
+      {
+        day: "Day 3 — Cardio Mix",
+        focus: "Endurance",
+        duration: 40,
+        totalCalories: 400,
+        exercises: [
+          { name: "Swimming / Brisk Walking", sets: 1, reps: "25 min", rest: "0 sec", calories: 250, muscles: ["Full Body", "Cardio"], videoTip: "Maintain steady breathing", instructions: ["Swim freestyle or walk briskly", "Keep heart rate elevated"] },
+          { name: "Jump Rope", sets: 5, reps: "2 min", rest: "30 sec", calories: 150, muscles: ["Calves", "Cardio"], videoTip: "Stay on balls of feet", instructions: ["Keep elbows tucked", "Use wrists to turn rope", "Small jumps"] },
+        ],
+      },
+      {
+        day: "Day 4 — Strength Training",
+        focus: "Muscle Retention & Burn",
+        duration: 45,
+        totalCalories: 350,
+        exercises: [
+          { name: "Push-ups", sets: 3, reps: "15 reps", rest: "45 sec", calories: 70, muscles: ["Chest", "Triceps"], videoTip: "Keep core tight", instructions: ["Hands slightly wider than shoulders", "Lower body until chest is near floor", "Push up"] },
+          { name: "Dumbbell Rows", sets: 3, reps: "12 reps", rest: "45 sec", calories: 80, muscles: ["Back", "Biceps"], videoTip: "Squeeze shoulder blades", instructions: ["Bend over, back straight", "Pull dumbbell to hip", "Lower slowly"] },
+          { name: "Lunges", sets: 3, reps: "15 reps/leg", rest: "45 sec", calories: 100, muscles: ["Quads", "Glutes"], videoTip: "Keep front knee behind toes", instructions: ["Step forward", "Lower back knee to floor", "Push back to start"] },
+          { name: "Plank", sets: 3, reps: "60 sec", rest: "30 sec", calories: 50, muscles: ["Core"], videoTip: "Don't let hips sag", instructions: ["Rest on forearms", "Keep body in straight line", "Engage core"] },
+          { name: "Glute Bridges", sets: 3, reps: "20 reps", rest: "30 sec", calories: 50, muscles: ["Glutes", "Hamstrings"], videoTip: "Squeeze at the top", instructions: ["Lie on back, knees bent", "Push hips towards ceiling", "Hold for a second"] },
+        ],
+      },
+      {
+        day: "Day 5 — HIIT (High Intensity Interval Training)",
+        focus: "Max Calorie Burn",
+        duration: 30,
+        totalCalories: 450,
+        exercises: [
+          { name: "HIIT Sprint Intervals", sets: 8, reps: "30 sec sprint", rest: "60 sec walk", calories: 200, muscles: ["Legs", "Cardio"], videoTip: "All out effort", instructions: ["Sprint as fast as possible", "Recover with a slow walk", "Repeat"] },
+          { name: "Burpees", sets: 3, reps: "15 reps", rest: "45 sec", calories: 100, muscles: ["Full Body"], videoTip: "Pace yourself", instructions: ["Drop to a plank", "Perform a push-up", "Jump feet in", "Leap up with hands overhead"] },
+          { name: "Squat Jumps", sets: 3, reps: "20 reps", rest: "45 sec", calories: 80, muscles: ["Quads", "Glutes"], videoTip: "Explode up", instructions: ["Squat down", "Jump as high as you can", "Land softly"] },
+          { name: "Mountain Climbers", sets: 3, reps: "60 sec", rest: "30 sec", calories: 70, muscles: ["Core", "Shoulders"], videoTip: "Keep a fast pace", instructions: ["Start in plank", "Drive knees to chest rapidly", "Keep back flat"] },
+        ],
+      },
+    ],
+  },
+  {
+    id: "wg-bulk",
+    title: "Weight Gain Exercises",
+    emoji: "🍚",
+    type: "Weight Gain",
+    level: "Intermediate",
+    location: "Gym",
+    duration: 60,
+    daysPerWeek: 4,
+    totalCaloriesPerWeek: 1500,
+    description: "Goal: Build overall body mass. Heavy Weights, 8–12 repetitions, Progressive overload. Focus: Eat in calorie surplus, Adequate protein, Proper sleep.",
+    color: "#8B5CF6",
+    gradient: "linear-gradient(135deg, #8B5CF6, #D946EF)",
+    completedDays: 0,
+    schedule: [
+      {
+        day: "Day 1 — Heavy Lower Body",
+        focus: "Squats & Posterior Chain",
+        duration: 50,
+        totalCalories: 300,
+        exercises: [
+          { name: "Barbell Squats", sets: 4, reps: "8–10 reps", rest: "120 sec", calories: 80, muscles: ["Quads", "Glutes"], videoTip: "Brace core tight", instructions: ["Bar on traps", "Squat below parallel", "Drive up powerfully"] },
+          { name: "Romanian Deadlifts", sets: 3, reps: "8–12 reps", rest: "90 sec", calories: 70, muscles: ["Hamstrings", "Glutes"], videoTip: "Hinge at the hips", instructions: ["Slight knee bend", "Push hips back", "Feel stretch in hamstrings"] },
+          { name: "Leg Press", sets: 3, reps: "10–12 reps", rest: "90 sec", calories: 60, muscles: ["Quads"], videoTip: "Don't lock knees at top", instructions: ["Feet shoulder width", "Lower slowly", "Push through heels"] },
+        ],
+      },
+      {
+        day: "Day 2 — Heavy Upper Body",
+        focus: "Push & Pull Power",
+        duration: 55,
+        totalCalories: 320,
+        exercises: [
+          { name: "Bench Press", sets: 4, reps: "8–10 reps", rest: "120 sec", calories: 80, muscles: ["Chest", "Triceps"], videoTip: "Keep feet flat on the ground", instructions: ["Lower bar to mid-chest", "Press up evenly", "Keep shoulders retracted"] },
+          { name: "Barbell Rows", sets: 4, reps: "8–12 reps", rest: "90 sec", calories: 90, muscles: ["Back", "Biceps"], videoTip: "Pull to your lower stomach", instructions: ["Hinge forward", "Keep back straight", "Row barbell to torso"] },
+          { name: "Shoulder Press", sets: 3, reps: "8–10 reps", rest: "90 sec", calories: 60, muscles: ["Shoulders", "Triceps"], videoTip: "Don't overarch your lower back", instructions: ["Press weight overhead", "Lock out elbows", "Lower slowly"] },
+        ],
+      },
+      {
+        day: "Day 3 — Lower Body Hypertrophy",
+        focus: "Leg Volume & Growth",
+        duration: 45,
+        totalCalories: 280,
+        exercises: [
+          { name: "Deadlifts", sets: 4, reps: "6–8 reps", rest: "120 sec", calories: 100, muscles: ["Hamstrings", "Back", "Glutes"], videoTip: "Keep bar close to your shins", instructions: ["Hinge hips back", "Grip bar tightly", "Drive through floor to stand"] },
+          { name: "Bulgarian Split Squats", sets: 3, reps: "10–12 reps/leg", rest: "90 sec", calories: 70, muscles: ["Quads", "Glutes"], videoTip: "Keep torso upright", instructions: ["Elevate rear foot", "Lower back knee", "Push through front heel"] },
+          { name: "Calf Raises", sets: 4, reps: "12–15 reps", rest: "60 sec", calories: 30, muscles: ["Calves"], videoTip: "Full stretch at bottom", instructions: ["Stand on edge of step", "Lower heels", "Raise high onto toes"] },
+        ],
+      },
+      {
+        day: "Day 4 — Upper Body Hypertrophy",
+        focus: "Back & Chest Volume",
+        duration: 50,
+        totalCalories: 300,
+        exercises: [
+          { name: "Pull-Ups", sets: 4, reps: "8–12 reps", rest: "90 sec", calories: 70, muscles: ["Back", "Biceps"], videoTip: "Pull with your elbows", instructions: ["Hang from bar", "Pull chest to bar", "Lower with control"] },
+          { name: "Incline Dumbbell Press", sets: 3, reps: "8–12 reps", rest: "90 sec", calories: 70, muscles: ["Upper Chest", "Shoulders"], videoTip: "Slight angle on bench", instructions: ["Press dumbbells up", "Squeeze chest at top", "Lower slowly"] },
+          { name: "Lateral Raises", sets: 3, reps: "12–15 reps", rest: "60 sec", calories: 40, muscles: ["Shoulders"], videoTip: "Pour the pitcher", instructions: ["Raise dumbbells to side", "Slight bend in elbow", "Control descent"] },
+        ],
+      },
+    ],
+  },
+  {
+    id: "maint-daily",
+    title: "Body Maintenance Exercises",
+    emoji: "⚖️",
+    type: "Maintenance",
+    level: "All" as Level,
+    location: "Both",
+    duration: 30,
+    daysPerWeek: 5,
+    totalCaloriesPerWeek: 1450,
+    description: "Goal: Stay healthy and maintain current weight. Cardio: 3 days/week, Strength: 2–3 days/week, Stretching: Daily.",
+    color: "#10B981",
+    gradient: "linear-gradient(135deg, #10B981, #34D399)",
+    completedDays: 0,
+    schedule: [
+      {
+        day: "Day 1 — Cardio & Flexibility",
+        focus: "Aerobic & Mobility",
+        duration: 40,
+        totalCalories: 300,
+        exercises: [
+          { name: "Walking / Jogging", sets: 1, reps: "25 min", rest: "0 sec", calories: 150, muscles: ["Cardio", "Legs"], videoTip: "Keep a brisk pace", instructions: ["Walk at a brisk pace", "Keep heart rate elevated"] },
+          { name: "Yoga Flow", sets: 1, reps: "15 min", rest: "0 sec", calories: 50, muscles: ["Full Body", "Mobility"], videoTip: "Focus on breathing", instructions: ["Perform sun salutations", "Hold stretches"] },
+        ],
+      },
+      {
+        day: "Day 2 — Core & Strength",
+        focus: "Full Body Maintenance",
+        duration: 35,
+        totalCalories: 250,
+        exercises: [
+          { name: "Push-Ups", sets: 3, reps: "12 reps", rest: "45 sec", calories: 50, muscles: ["Chest", "Triceps"], videoTip: "Maintain a straight line", instructions: ["Lower chest to floor", "Push back up"] },
+          { name: "Squats", sets: 3, reps: "15 reps", rest: "45 sec", calories: 60, muscles: ["Quads", "Glutes"], videoTip: "Keep chest up", instructions: ["Squat to parallel", "Squeeze glutes at top"] },
+          { name: "Planks", sets: 3, reps: "45 sec", rest: "30 sec", calories: 30, muscles: ["Core"], videoTip: "Don't let hips sag", instructions: ["Rest on forearms", "Hold body straight"] },
+          { name: "Daily Stretching", sets: 1, reps: "10 min", rest: "0 sec", calories: 30, muscles: ["Full Body", "Mobility"], videoTip: "Relax into it", instructions: ["Stretch major muscle groups", "Hold each stretch for 30s"] },
+        ],
+      },
+      {
+        day: "Day 3 — Active Recovery",
+        focus: "Swimming / Cycling",
+        duration: 40,
+        totalCalories: 300,
+        exercises: [
+          { name: "Cycling / Swimming", sets: 1, reps: "30 min", rest: "0 sec", calories: 200, muscles: ["Cardio", "Full Body"], videoTip: "Steady effort", instructions: ["Maintain a moderate pace", "Focus on form"] },
+          { name: "Mobility Exercises", sets: 1, reps: "10 min", rest: "0 sec", calories: 40, muscles: ["Full Body", "Mobility"], videoTip: "Move through full range", instructions: ["Perform dynamic stretches", "Focus on joints"] },
+        ],
+      },
+      {
+        day: "Day 4 — Pull & Lower Body",
+        focus: "Back, Legs & Flexibility",
+        duration: 40,
+        totalCalories: 280,
+        exercises: [
+          { name: "Pull-Ups", sets: 3, reps: "8 reps", rest: "60 sec", calories: 50, muscles: ["Back", "Biceps"], videoTip: "Use assistance if needed", instructions: ["Pull chin over bar", "Lower slowly"] },
+          { name: "Squats", sets: 3, reps: "15 reps", rest: "45 sec", calories: 60, muscles: ["Quads", "Glutes"], videoTip: "Drive through heels", instructions: ["Squat to parallel", "Squeeze glutes at top"] },
+          { name: "Daily Stretching", sets: 1, reps: "15 min", rest: "0 sec", calories: 50, muscles: ["Full Body", "Mobility"], videoTip: "Deep breathing", instructions: ["Focus on tight areas", "Hold stretches"] },
+        ],
+      },
+      {
+        day: "Day 5 — Cardio & Core",
+        focus: "Heart Health & Abs",
+        duration: 45,
+        totalCalories: 320,
+        exercises: [
+          { name: "Brisk Walking", sets: 1, reps: "30 min", rest: "0 sec", calories: 180, muscles: ["Cardio", "Legs"], videoTip: "Pump your arms", instructions: ["Walk at a fast pace", "Keep posture upright"] },
+          { name: "Planks", sets: 3, reps: "60 sec", rest: "30 sec", calories: 40, muscles: ["Core"], videoTip: "Breathe normally", instructions: ["Rest on forearms", "Hold body straight"] },
+          { name: "Yoga", sets: 1, reps: "10 min", rest: "0 sec", calories: 40, muscles: ["Full Body", "Mobility"], videoTip: "Cool down", instructions: ["Gentle flow", "Focus on relaxation"] },
+        ],
+      },
     ],
   },
   {
     id: "mg-45",
-    title: "Muscle Gain Power",
+    title: "Muscle Gain Exercises",
     emoji: "💪",
     type: "Muscle Gain",
     level: "Intermediate",
     location: "Gym",
-    duration: 45,
-    daysPerWeek: 4,
-    totalCaloriesPerWeek: 2200,
-    description: "Progressive overload program targeting hypertrophy. Split training with compound lifts.",
+    duration: 60,
+    daysPerWeek: 5,
+    totalCaloriesPerWeek: 2500,
+    description: "Goal: Increase muscle size (Hypertrophy). 5-day split targeting all major muscle groups.",
     color: "#6366F1",
     gradient: "linear-gradient(135deg, #6366F1, #8B5CF6)",
     completedDays: 12,
     schedule: [
       {
-        day: "Day 1 — Chest & Triceps",
-        focus: "Push Day",
-        duration: 60,
-        totalCalories: 420,
+        day: "Monday — Chest + Triceps",
+        focus: "Push Hypertrophy",
+        duration: 45,
+        totalCalories: 350,
         exercises: [
-          { name: "Bench Press", sets: 4, reps: "8–10 reps", rest: "90 sec", calories: 80, muscles: ["Chest", "Triceps"], videoTip: "Arch slightly, retract scapula", instructions: ["Lie on bench, feet flat", "Grip slightly wider than shoulders", "Lower bar to mid-chest", "Press explosively up"] },
-          { name: "Incline Dumbbell Fly", sets: 3, reps: "12 reps", rest: "60 sec", calories: 50, muscles: ["Upper Chest"], videoTip: "Slight bend in elbows", instructions: ["Set bench to 30–45°", "Hold dumbbells above chest", "Open arms in arc motion", "Squeeze chest to bring back"] },
-          { name: "Tricep Dips", sets: 3, reps: "15 reps", rest: "60 sec", calories: 45, muscles: ["Triceps"], videoTip: "Keep elbows close", instructions: ["Grip parallel bars", "Lower body until elbows 90°", "Push up to start", "Lean slightly forward"] },
-          { name: "Cable Crossover", sets: 3, reps: "15 reps", rest: "45 sec", calories: 35, muscles: ["Chest"], videoTip: "Control the eccentric", instructions: ["Set cables at shoulder height", "Step forward, slight lean", "Bring hands together in arc", "Squeeze chest at center"] },
+          { name: "Bench Press", sets: 4, reps: "8–12 reps", rest: "90 sec", calories: 80, muscles: ["Chest", "Triceps"], videoTip: "Keep feet flat and drive", instructions: ["Lie on bench", "Lower bar to mid-chest", "Press explosively up"] },
+          { name: "Incline Dumbbell Press", sets: 3, reps: "10–12 reps", rest: "90 sec", calories: 70, muscles: ["Upper Chest"], videoTip: "Squeeze at top", instructions: ["Set bench to 30°", "Press dumbbells up", "Lower slowly"] },
+          { name: "Push-Ups", sets: 3, reps: "To failure", rest: "60 sec", calories: 50, muscles: ["Chest", "Triceps"], videoTip: "Core tight", instructions: ["Hands slightly wider than shoulders", "Lower body", "Push up fully"] },
+          { name: "Tricep Pushdowns", sets: 3, reps: "12–15 reps", rest: "60 sec", calories: 40, muscles: ["Triceps"], videoTip: "Keep elbows tucked", instructions: ["Grip cable attachment", "Push down until arms straight", "Control on way up"] },
         ],
       },
       {
-        day: "Day 2 — Back & Biceps",
-        focus: "Pull Day",
-        duration: 65,
-        totalCalories: 450,
+        day: "Tuesday — Back + Biceps",
+        focus: "Pull Hypertrophy",
+        duration: 45,
+        totalCalories: 350,
         exercises: [
-          { name: "Deadlift", sets: 4, reps: "6–8 reps", rest: "120 sec", calories: 100, muscles: ["Back", "Hamstrings", "Glutes"], videoTip: "Neutral spine throughout", instructions: ["Bar over mid-foot", "Hip-hinge to grip bar", "Brace core, drive hips forward", "Lock out at top"] },
-          { name: "Pull-ups", sets: 4, reps: "8–10 reps", rest: "90 sec", calories: 60, muscles: ["Lats", "Biceps"], videoTip: "Full range of motion", instructions: ["Dead hang grip shoulder-width", "Pull chest to bar", "Control the descent", "Avoid kipping"] },
-          { name: "Seated Cable Row", sets: 3, reps: "12 reps", rest: "60 sec", calories: 45, muscles: ["Mid Back", "Biceps"], videoTip: "Squeeze shoulder blades", instructions: ["Sit upright, slight lean back", "Pull handle to lower chest", "Hold 1 second squeeze", "Return slowly"] },
-          { name: "Barbell Curl", sets: 3, reps: "12 reps", rest: "45 sec", calories: 30, muscles: ["Biceps"], videoTip: "Don't swing body", instructions: ["Stand, grip shoulder-width", "Curl bar to shoulder height", "Squeeze at top", "Lower slowly"] },
+          { name: "Pull-Ups", sets: 4, reps: "8–12 reps", rest: "90 sec", calories: 60, muscles: ["Lats", "Biceps"], videoTip: "Full range of motion", instructions: ["Hang from bar", "Pull chest to bar", "Lower with control"] },
+          { name: "Lat Pulldown", sets: 3, reps: "10–12 reps", rest: "60 sec", calories: 50, muscles: ["Lats", "Biceps"], videoTip: "Lean back slightly", instructions: ["Grip wide", "Pull bar to upper chest", "Squeeze lats"] },
+          { name: "Barbell Rows", sets: 3, reps: "8–12 reps", rest: "90 sec", calories: 80, muscles: ["Mid Back", "Biceps"], videoTip: "Keep back flat", instructions: ["Hinge at hips", "Row bar to stomach", "Squeeze shoulder blades"] },
+          { name: "Bicep Curls", sets: 3, reps: "12–15 reps", rest: "60 sec", calories: 30, muscles: ["Biceps"], videoTip: "Don't swing", instructions: ["Stand tall", "Curl weight up", "Lower slowly"] },
+          { name: "Hammer Curls", sets: 3, reps: "12–15 reps", rest: "60 sec", calories: 30, muscles: ["Biceps", "Forearms"], videoTip: "Neutral grip", instructions: ["Hold dumbbells neutral", "Curl up", "Lower slowly"] },
+        ],
+      },
+      {
+        day: "Wednesday — Legs",
+        focus: "Lower Body Volume",
+        duration: 50,
+        totalCalories: 400,
+        exercises: [
+          { name: "Squats", sets: 4, reps: "8–12 reps", rest: "120 sec", calories: 100, muscles: ["Quads", "Glutes"], videoTip: "Drive through heels", instructions: ["Bar on back", "Squat below parallel", "Stand back up"] },
+          { name: "Leg Press", sets: 3, reps: "10–15 reps", rest: "90 sec", calories: 70, muscles: ["Quads", "Hamstrings"], videoTip: "Don't lock knees", instructions: ["Feet shoulder width", "Lower sled", "Push back up"] },
+          { name: "Lunges", sets: 3, reps: "12 reps/leg", rest: "90 sec", calories: 80, muscles: ["Quads", "Glutes"], videoTip: "Keep torso upright", instructions: ["Step forward", "Lower hips", "Push back to start"] },
+        ],
+      },
+      {
+        day: "Thursday — Shoulders",
+        focus: "Deltoid Hypertrophy",
+        duration: 40,
+        totalCalories: 300,
+        exercises: [
+          { name: "Shoulder Press", sets: 4, reps: "8–12 reps", rest: "90 sec", calories: 60, muscles: ["Shoulders", "Triceps"], videoTip: "Don't overarch back", instructions: ["Press weight overhead", "Lock out elbows", "Lower slowly"] },
+          { name: "Lateral Raises", sets: 3, reps: "15 reps", rest: "60 sec", calories: 40, muscles: ["Side Delts"], videoTip: "Slight bend in elbow", instructions: ["Raise arms out", "Stop at shoulder height", "Lower slowly"] },
+          { name: "Rear Delt Fly", sets: 3, reps: "15 reps", rest: "60 sec", calories: 40, muscles: ["Rear Delts"], videoTip: "Squeeze shoulder blades", instructions: ["Bend over", "Raise arms out", "Squeeze at top"] },
+        ],
+      },
+      {
+        day: "Friday — Full Body",
+        focus: "Overall Pump",
+        duration: 45,
+        totalCalories: 400,
+        exercises: [
+          { name: "Squats", sets: 3, reps: "10 reps", rest: "90 sec", calories: 80, muscles: ["Quads", "Glutes"], videoTip: "Drive through heels", instructions: ["Bar on back", "Squat below parallel", "Stand back up"] },
+          { name: "Bench Press", sets: 3, reps: "10 reps", rest: "90 sec", calories: 60, muscles: ["Chest", "Triceps"], videoTip: "Keep feet flat", instructions: ["Lie on bench", "Lower bar to mid-chest", "Press up"] },
+          { name: "Lat Pulldown", sets: 3, reps: "10 reps", rest: "60 sec", calories: 50, muscles: ["Lats", "Biceps"], videoTip: "Lean back slightly", instructions: ["Grip wide", "Pull bar to upper chest", "Squeeze lats"] },
+          { name: "Shoulder Press", sets: 3, reps: "10 reps", rest: "90 sec", calories: 50, muscles: ["Shoulders"], videoTip: "Control the weight", instructions: ["Press weight overhead", "Lower slowly"] },
         ],
       },
     ],
@@ -219,8 +420,9 @@ function LevelBadge({ level }: { level: Level }) {
     Beginner:     { color: "#2EC972", bg: "#F0FDF4" },
     Intermediate: { color: "#F59E0B", bg: "#FFFBEB" },
     Advanced:     { color: "#EF4444", bg: "#FEF2F2" },
+    All:          { color: "#3B82F6", bg: "#EFF6FF" },
   };
-  const { color, bg } = cfg[level];
+  const { color, bg } = cfg[level] || cfg["Beginner"];
   return (
     <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: bg, color }}>
       {level}
@@ -249,7 +451,7 @@ function ProgressRing({ pct, color, size = 56 }: { pct: number; color: string; s
 
 // ─── Exercise Card (expandable) ───────────────────────────────────────────────
 
-function ExerciseCard({ ex, idx }: { ex: Exercise; idx: number }) {
+function ExerciseCard({ ex, idx, isCompleted, onToggle }: { ex: Exercise; idx: number; isCompleted?: boolean; onToggle?: () => void }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{
@@ -286,6 +488,19 @@ function ExerciseCard({ ex, idx }: { ex: Exercise; idx: number }) {
           <span style={{ fontSize: 11, color: "var(--text2)", background: "var(--bg)", padding: "2px 8px", borderRadius: 8 }}>
             {ex.muscles[0]}
           </span>
+          {onToggle && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggle(); }}
+              style={{
+                width: 24, height: 24, borderRadius: 6,
+                border: `2px solid ${isCompleted ? "var(--green)" : "var(--border)"}`,
+                background: isCompleted ? "var(--green)" : "#fff",
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              }}
+            >
+              {isCompleted && <Check size={14} color="#fff" />}
+            </button>
+          )}
           {open ? <ChevronUp size={16} color="var(--text2)" /> : <ChevronDown size={16} color="var(--text2)" />}
         </div>
       </div>
@@ -437,15 +652,31 @@ export default function WorkoutPlans({ showToast }: { showToast: (msg: string) =
           <div style={{
             background: "#fff", borderRadius: 16, padding: "16px 20px",
             boxShadow: "0 2px 12px rgba(0,0,0,0.05)", border: "1.5px solid var(--border)",
-            marginBottom: 20, display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center",
+            marginBottom: 20, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text2)", fontSize: 13, fontWeight: 600 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text2)", fontSize: 13, fontWeight: 600, marginRight: 4 }}>
               <Filter size={16} /> Filters
             </div>
-            {/* Level */}
-            <div style={{ display: "flex", gap: 6 }}>
-              {(["All", "Beginner", "Intermediate", "Advanced"] as const).map(l => (
-                <button key={l} onClick={() => setFilterLevel(l)} style={{
+
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", flex: 1 }}>
+              {/* Single All Button */}
+              <button onClick={() => { setFilterLevel("All"); setFilterType("All"); setFilterLocation("All"); }} style={{
+                padding: "6px 14px", borderRadius: 20, border: "1.5px solid",
+                fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .2s",
+                borderColor: (filterLevel === "All" && filterType === "All" && filterLocation === "All") ? "var(--green)" : "var(--border)",
+                background: (filterLevel === "All" && filterType === "All" && filterLocation === "All") ? "var(--green-light)" : "#fff",
+                color: (filterLevel === "All" && filterType === "All" && filterLocation === "All") ? "var(--green)" : "var(--text2)",
+              }}>
+                All
+              </button>
+
+              {/* Level Options */}
+              {(["Beginner", "Intermediate", "Advanced"] as const).map(l => (
+                <button key={l} onClick={() => {
+                  setFilterLevel(filterLevel === l ? "All" : l);
+                  setFilterType("All");
+                  setFilterLocation("All");
+                }} style={{
                   padding: "6px 14px", borderRadius: 20, border: "1.5px solid",
                   fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .2s",
                   borderColor: filterLevel === l ? "var(--green)" : "var(--border)",
@@ -455,11 +686,31 @@ export default function WorkoutPlans({ showToast }: { showToast: (msg: string) =
                   {l}
                 </button>
               ))}
-            </div>
-            {/* Location */}
-            <div style={{ display: "flex", gap: 6, marginLeft: "auto" }}>
-              {(["All", "Home", "Gym"] as const).map(l => (
-                <button key={l} onClick={() => setFilterLocation(l)} style={{
+
+              {/* Goal / Type Options */}
+              {(["Weight Loss", "Weight Gain", "Muscle Gain", "Maintenance"] as const).map(l => (
+                <button key={l} onClick={() => {
+                  setFilterType(filterType === l ? "All" : l as any);
+                  setFilterLevel("All");
+                  setFilterLocation("All");
+                }} style={{
+                  padding: "6px 14px", borderRadius: 20, border: "1.5px solid",
+                  fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .2s",
+                  borderColor: filterType === l ? "#F59E0B" : "var(--border)",
+                  background: filterType === l ? "#FFFBEB" : "#fff",
+                  color: filterType === l ? "#D97706" : "var(--text2)",
+                }}>
+                  {l}
+                </button>
+              ))}
+
+              {/* Location Options */}
+              {(["Home", "Gym"] as const).map(l => (
+                <button key={l} onClick={() => {
+                  setFilterLocation(filterLocation === l ? "All" : l);
+                  setFilterLevel("All");
+                  setFilterType("All");
+                }} style={{
                   padding: "6px 14px", borderRadius: 20, border: "1.5px solid",
                   fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .2s",
                   borderColor: filterLocation === l ? "#6366F1" : "var(--border)",
@@ -686,21 +937,13 @@ export default function WorkoutPlans({ showToast }: { showToast: (msg: string) =
                     {currentDay.exercises.map((ex, i) => {
                       const key = `${currentDay.day}-${i}`;
                       return (
-                        <div key={i} style={{ position: "relative" }}>
-                          <button
-                            onClick={() => toggleExercise(key)}
-                            style={{
-                              position: "absolute", top: 14, right: 56, zIndex: 5,
-                              width: 28, height: 28, borderRadius: 8,
-                              border: `2px solid ${completedExercises.has(key) ? "var(--green)" : "var(--border)"}`,
-                              background: completedExercises.has(key) ? "var(--green)" : "#fff",
-                              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                            }}
-                          >
-                            {completedExercises.has(key) && <Check size={14} color="#fff" />}
-                          </button>
-                          <ExerciseCard ex={ex} idx={i} />
-                        </div>
+                        <ExerciseCard 
+                          key={i} 
+                          ex={ex} 
+                          idx={i} 
+                          isCompleted={completedExercises.has(key)} 
+                          onToggle={() => toggleExercise(key)} 
+                        />
                       );
                     })}
                   </>
