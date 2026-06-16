@@ -7,6 +7,7 @@ import {
   Camera, Check, Eye, EyeOff, ChevronRight, LogOut, Trash2, Sun,
 } from "lucide-react";
 import { UserType } from "../page";
+import { useTranslation } from "../../lib/i18n/LanguageContext";
 
 // ─── Section nav config ───────────────────────────────────────────────────────
 
@@ -140,6 +141,8 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
   const { user: clerkUser } = useUser();
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+  
+  const { language, setLanguage, t } = useTranslation();
 
   const [activeSection, setActiveSection] = useState("profile");
 
@@ -200,7 +203,6 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
   const [emailNotifs, setEmailNotifs] = useState(true);
 
   // Language
-  const [language, setLanguage] = useState("en");
   const [dateFormat, setDateFormat] = useState("DD/MM/YYYY");
   const [units, setUnits] = useState("metric");
   const [currency, setCurrency] = useState("INR");
@@ -302,7 +304,7 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
               onMouseLeave={e => { if (activeSection !== sec.id) e.currentTarget.style.background = "transparent"; }}
             >
               <span style={{ fontSize: 16 }}>{sec.emoji}</span>
-              <span style={{ flex: 1 }}>{sec.label}</span>
+              <span style={{ flex: 1 }}>{t(`settings.${sec.id === 'health' ? 'healthInfo' : sec.id === 'appearance' ? 'darkMode' : sec.id}`)}</span>
               {activeSection === sec.id && <ChevronRight size={14} />}
             </div>
           ))}
@@ -320,7 +322,7 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
             onMouseEnter={e => e.currentTarget.style.background = "#FEF2F2"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}
           >
-            <LogOut size={16} /> Sign Out
+            <LogOut size={16} /> {t("settings.signOut")}
           </div>
         </div>
       </div>
@@ -649,9 +651,9 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
 
         {/* ════ LANGUAGE ════ */}
         {activeSection === "language" && (
-          <SectionCard title="Language & Region" emoji="🌐">
+          <SectionCard title={t("settings.languageAndRegion")} emoji="🌐">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <SelectField label="Language" value={language} onChange={setLanguage} options={[
+              <SelectField label={t("settings.languageLabel")} value={language} onChange={setLanguage} options={[
                 { value: "en",    label: "🇬🇧 English" },
                 { value: "hi",    label: "🇮🇳 Hindi" },
                 { value: "gu",    label: "🇮🇳 Gujarati" },
@@ -662,23 +664,23 @@ export default function Settings({ showToast, user }: { showToast: (msg: string)
                 { value: "fr",    label: "🇫🇷 French" },
                 { value: "de",    label: "🇩🇪 German" },
               ]} />
-              <SelectField label="Date Format" value={dateFormat} onChange={setDateFormat} options={[
+              <SelectField label={t("settings.dateFormat")} value={dateFormat} onChange={setDateFormat} options={[
                 { value: "DD/MM/YYYY", label: "DD/MM/YYYY" },
                 { value: "MM/DD/YYYY", label: "MM/DD/YYYY" },
                 { value: "YYYY-MM-DD", label: "YYYY-MM-DD" },
               ]} />
-              <SelectField label="Units System" value={units} onChange={setUnits} options={[
+              <SelectField label={t("settings.unitsSystem")} value={units} onChange={setUnits} options={[
                 { value: "metric",   label: "📏 Metric (kg, cm, km)" },
                 { value: "imperial", label: "📐 Imperial (lbs, ft, miles)" },
               ]} />
-              <SelectField label="Currency" value={currency} onChange={setCurrency} options={[
+              <SelectField label={t("settings.currency")} value={currency} onChange={setCurrency} options={[
                 { value: "INR", label: "₹ Indian Rupee" },
                 { value: "USD", label: "$ US Dollar" },
                 { value: "EUR", label: "€ Euro" },
                 { value: "GBP", label: "£ British Pound" },
               ]} />
             </div>
-            <SaveBtn onClick={() => showToast("✅ Language & region saved!")} />
+            <SaveBtn onClick={() => showToast(t("settings.savedMsg"))} />
           </SectionCard>
         )}
 

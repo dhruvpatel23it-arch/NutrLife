@@ -3,6 +3,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
+import { LanguageProvider } from "../lib/i18n/LanguageContext";
+
 export const metadata: Metadata = {
   title: "NutriLife – Your Healthy Diet Companion",
   description: "Track meals, recipes, progress, and more",
@@ -28,7 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}} />
           <Analytics />
         </head>
-        <body>{children}</body>
+        <body>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
